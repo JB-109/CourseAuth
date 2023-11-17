@@ -23,44 +23,31 @@ function requests (req, res, next) {
 }
 app.use(requests);
 
-async function adminAuth (req, res, next) {
-    const {username, password} = req.headers;
-    let storedAdmin = await readFile("admin.json");
-    let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
-    if(adminCheck){
-        next();
-    }
-    else{
-        res.status(401).send("Authorization Failed");
-    }
-}
-
 app.get("/admin", adminAuth, async (req, res) => {
     let storedAdmin = await readFile("admin.json");
     res.send(storedAdmin);
 });
 
 app.post("/admin/signup", async (req, res) => {
-    const newAdmin = req.body;
+    let newAdmin = req.body;
     let storedAdmin = await readFile("admin.json");
     let adminCheck = storedAdmin.find(u => u.username == newAdmin.username && u.password == newAdmin.password);
     if(adminCheck) {
         res.status(401).send("Admin Already Exist");
     }
     else{
-        const token = createJWT(newAdmin);
         storedAdmin.push(newAdmin);
         let update = await writeFile("admin.json",JSON.stringify(storedAdmin));
-        res.cookie("token", token);
-        res.send(update +" "+ token);
+        res.send(update);
     }
 });
 
-app.get("/admin/login", adminAuth, (req, res) => {
-    res.send("Login Successful");
+app.post("/admin/login", adminAuth, verifytoken, checkExistance, (req, res) => {
+    res.json({user: req.user});
+    console.log(req.user)
 });
 
-app.post("/admin/add-courses", presentJWT, async (req, res) => {
+app.post("/admin/add-courses", verifytoken, async (req, res) => {
     let storedCourses = await readFile("courses.json");
     let newCourses = req.body;
     storedCourses.push(newCourses);
@@ -68,44 +55,44 @@ app.post("/admin/add-courses", presentJWT, async (req, res) => {
     res.send(update);
 });
 
-app.put("/admin/update-courses", adminAuth, (req, res) => {
+// app.put("/admin/update-courses", adminAuth, (req, res) => {
     
-});
+// });
 
-async function userAuth (req, res, next) {
-    let user = req.headers;
-    let storedUser = await readFile("users.json");
-    let userCheck = storedUser.find(u => u.username == user.username && u.password == user.password);
-    if(userCheck) {
-        next();
-    }
-    else{
-        res.status(401).send("User does not Exist");
-    }
-}
+// async function userAuth (req, res, next) {
+//     let user = req.headers;
+//     let storedUser = await readFile("users.json");
+//     let userCheck = storedUser.find(u => u.username == user.username && u.password == user.password);
+//     if(userCheck) {
+//         next();
+//     }
+//     else{
+//         res.status(401).send("User does not Exist");
+//     }
+// }
 
-app.post("/user/signup", async (req, res) => {
-    const newUser = req.body;
-    let storedUser = await readFile("users.json");
-    let userCheck = storedUser.find(u => u.username == newUser.username && u.password == newUser.password);
-    if(userCheck) {
-        res.status(401).send("User Already Exist");
-    }
-    else{
-        storedUser.push(newUser);
-        let update = await writeFile("users.json",JSON.stringify(storedUser));
-        res.send(update);
-    }
-});
+// app.post("/user/signup", async (req, res) => {
+//     const newUser = req.body;
+//     let storedUser = await readFile("users.json");
+//     let userCheck = storedUser.find(u => u.username == newUser.username && u.password == newUser.password);
+//     if(userCheck) {
+//         res.status(401).send("User Already Exist");
+//     }
+//     else{
+//         storedUser.push(newUser);
+//         let update = await writeFile("users.json",JSON.stringify(storedUser));
+//         res.send(update);
+//     }
+// });
 
-app.get("/user/login", userAuth, (req, res) => {
-    res.send("Login Successful");
-});
+// app.get("/user/login", userAuth, (req, res) => {
+//     res.send("Login Successful");
+// });
 
-app.get("/user/courses", userAuth, async (req, res) => {
-    let storedCourses = await readFile("courses.json");
-    res.send(courses.json);
-});
+// app.get("/user/courses", userAuth, async (req, res) => {
+//     let storedCourses = await readFile("courses.json");
+//     res.send(courses.json);
+// });
 
 function readFile (file) {
     return new Promise ((resolve, reject) => {
@@ -134,20 +121,61 @@ function writeFile (file, data) {
     });
 }
 
+async function adminAuth (req, res, next) {
+    const username = req.body.username;
+    let password = req.body.password;
+    console.log(username);
+    if(username){
+    let storedAdmin = await readFile("admin.json");
+    let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
+    if(adminCheck){
+        next();
+    }
+    else{
+        res.status(401).send("Authorization Failed");
+    }
+    }
+    next();
+}
+
 function createJWT (user) {
     const token = jwt.sign(user, secretKey, { expiresIn: "1h"});
     return token;
 }
 
-function presentJWT (req, res, next) {
-    const tokenPresent = req.cookies.token;
-    if(!tokenPresent) {
-        res.status(401).send("Not Authorized");
+function verifytoken (req, res, next) {
+    const username = req.body.username;
+
+    let tokenPresent = req.cookies.token;
+    console.log(tokenPresent);
+
+    if(tokenPresent) {
+    let token = req.cookies.token;
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if(err){
+            res.status(401).send(err.message);
+        }
+        req.user = decoded;
+        next();
+    })
     }
-        jwt.verify(tokenPresent, secretKey, (err, decoded) => {
-            if (err) {
-                res.status(403).send(err.message);
-            }
-            next();
-        })   
+    if(!username) {
+        res.status(401).send("Input Username");
+    }
+    next();
+}
+
+function checkExistance (req, res, next) {
+    let tokenPresent = req.cookies.token;
+    console.log(tokenPresent);
+    
+    if(!tokenPresent){
+        let newAdmin = req.body;
+        let token = createJWT(newAdmin);
+        req.user = newAdmin.username;
+        res.cookie("token", token);
+        console.log(token);
+        next();
+    }
+        next();
 }

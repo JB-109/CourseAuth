@@ -39,7 +39,7 @@ function Signin() {
           }}/>
 
           <br/><br/>
-          <TextField fullWidth={true} id="Password" label="Password" variant="outlined" onChange={(e) => {
+          <TextField fullWidth={true} id="Password" label="Password" variant="outlined" type="password" onChange={(e) => {
             setPassword(e.target.value);
           }}/>
 
@@ -50,6 +50,7 @@ function Signin() {
             onClick={()=> {
                fetch("http://localhost:3000/admin/login", {
                   method: "POST",
+                  credentials: "include",
                   body: JSON.stringify({
                     username: Username,
                     password: Password
