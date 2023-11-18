@@ -96,8 +96,10 @@ app.post("/admin/add-courses", verifytoken, async (req, res) => {
 });
 
 app.get("/me", (req, res) => {
-    res.json({username: req.user.username});
-    console.log(req.user.username);
+    res.json({username: "TESTING"});
+    if(req.user) {
+        console.log(req.user.username)
+    }
 });
 
 // app.put("/admin/update-courses", adminAuth, (req, res) => {

@@ -7,6 +7,19 @@ function Appbar() {
     const navigate = useNavigate();
     const[user, setuser] = useState();
 
+    useEffect(() => {
+        fetch("http://localhost:3000/me", {
+            method: "GET",
+            headers: {
+                "content-type": "application/json"
+            },
+            credentials: "include",
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            console.log(data);
+        });
+    }, []);
 
     return (
         <div style={{
