@@ -1,19 +1,24 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Appbar() {
+
     const navigate = useNavigate();
+    const[user, setuser] = useState();
+
 
     return (
         <div style={{
             display: "flex",
             justifyContent: "space-between"
         }}>
+            
+
             <Typography variant={"h6"} style={{
                 color: "white"
             }}>
-                Tunnel
+                {user}
             </Typography>
             <div>
                 <button 

@@ -28,6 +28,46 @@ app.get("/admin", adminAuth, async (req, res) => {
     res.send(storedAdmin);
 });
 
+
+function createJWT (user) {
+    const token = jwt.sign(user, secretKey, { expiresIn: "1h"});
+    return token;
+}
+
+function verifytoken (req, res, next) {
+    const username = req.body.username;
+
+    let tokenPresent = req.cookies.token;
+
+    if(tokenPresent) {
+    jwt.verify(tokenPresent, secretKey, (err, decoded) => {
+        if(err){
+            res.status(401).send(err.message);
+        }
+        req.user = decoded;
+        console.log(req.user);
+        next();
+    })
+    }
+    if(!username) {
+        res.status(401).send("Input Username");
+    }
+    next();
+}
+
+function checkExistance (req, res, next) {
+    let tokenPresent = req.cookies.token;
+    
+    if(!tokenPresent){
+        let newAdmin = req.body;
+        let token = createJWT(newAdmin);
+        res.cookie("token", token);
+        next();
+    }
+        next();
+}
+
+
 app.post("/admin/signup", async (req, res) => {
     let newAdmin = req.body;
     let storedAdmin = await readFile("admin.json");
@@ -43,8 +83,8 @@ app.post("/admin/signup", async (req, res) => {
 });
 
 app.post("/admin/login", adminAuth, verifytoken, checkExistance, (req, res) => {
-    res.json({user: req.user});
-    console.log(req.user)
+    res.json({username: req.user.username});
+    console.log(req.user.username);
 });
 
 app.post("/admin/add-courses", verifytoken, async (req, res) => {
@@ -53,6 +93,11 @@ app.post("/admin/add-courses", verifytoken, async (req, res) => {
     storedCourses.push(newCourses);
     let update = await writeFile("courses.json",JSON.stringify(storedCourses));
     res.send(update);
+});
+
+app.get("/me", (req, res) => {
+    res.json({username: req.user.username});
+    console.log(req.user.username);
 });
 
 // app.put("/admin/update-courses", adminAuth, (req, res) => {
@@ -124,8 +169,9 @@ function writeFile (file, data) {
 async function adminAuth (req, res, next) {
     const username = req.body.username;
     let password = req.body.password;
-    console.log(username);
     if(username){
+    req.user = {username: username};
+    console.log(req.user);
     let storedAdmin = await readFile("admin.json");
     let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
     if(adminCheck){
@@ -136,46 +182,4 @@ async function adminAuth (req, res, next) {
     }
     }
     next();
-}
-
-function createJWT (user) {
-    const token = jwt.sign(user, secretKey, { expiresIn: "1h"});
-    return token;
-}
-
-function verifytoken (req, res, next) {
-    const username = req.body.username;
-
-    let tokenPresent = req.cookies.token;
-    console.log(tokenPresent);
-
-    if(tokenPresent) {
-    let token = req.cookies.token;
-    jwt.verify(token, secretKey, (err, decoded) => {
-        if(err){
-            res.status(401).send(err.message);
-        }
-        req.user = decoded;
-        next();
-    })
-    }
-    if(!username) {
-        res.status(401).send("Input Username");
-    }
-    next();
-}
-
-function checkExistance (req, res, next) {
-    let tokenPresent = req.cookies.token;
-    console.log(tokenPresent);
-    
-    if(!tokenPresent){
-        let newAdmin = req.body;
-        let token = createJWT(newAdmin);
-        req.user = newAdmin.username;
-        res.cookie("token", token);
-        console.log(token);
-        next();
-    }
-        next();
 }
