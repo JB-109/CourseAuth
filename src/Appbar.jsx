@@ -18,6 +18,7 @@ function Appbar() {
             return response.json()
         }).then(data => {
             console.log(data);
+            setuser(data.username);
         });
     }, []);
 
@@ -30,8 +31,7 @@ function Appbar() {
 
             <Typography variant={"h6"} style={{
                 color: "white"
-            }}>
-                {user}
+            }}>{user}
             </Typography>
             <div>
                 <button 

@@ -11,10 +11,12 @@ app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:5173"}));
 app.use(cookieParser());
 
+// SERVER
 const server = app.listen(port, () => {
     console.log(`Server Started at Port ${port}`);
 });
 
+// SERVER LOGS
 let totRequest = 0;
 function requests (req, res, next) {
     totRequest += 1;
@@ -23,39 +25,82 @@ function requests (req, res, next) {
 }
 app.use(requests);
 
+// ADMIN END-POINT
 app.get("/admin", adminAuth, async (req, res) => {
     let storedAdmin = await readFile("admin.json");
     res.send(storedAdmin);
 });
 
+// ADMIN SIGN-UP END-POINT
+app.post("/admin/signup", async (req, res) => {
+    try {
+    let newAdmin = req.body;
+    let storedAdmin = await readFile("admin.json");
+    let adminCheck = storedAdmin.find(u => u.username == newAdmin.username && u.password == newAdmin.password);
+    if(adminCheck) {
+        res.status(409).send("Admin Already Exist");
+    }
+    else{
+        storedAdmin.push(newAdmin);
+        let update = await writeFile("admin.json",JSON.stringify(storedAdmin));
+        res.status(201).send(update);
+    }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("error at ADMIN-SIGNUP");
+    }
+});
 
-function createJWT (user) {
-    const token = jwt.sign(user, secretKey, { expiresIn: "1h"});
-    return token;
+// MIDDLEWARE ADMIN-AUTH
+async function adminAuth (req, res, next) {
+    try {
+    const username = req.body.username;
+    let password = req.body.password;
+    if(username){
+    req.user = {username: username};
+    let storedAdmin = await readFile("admin.json");
+    let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
+    if(adminCheck){
+        next();
+    }
+    else{
+        res.status(401).send("Authorization Failed");
+    }
+    } else {
+    next();
+    }
+    } catch (error) {
+        console.error(error.message);
+        res.status(401).send("error at ADMIN-AUTH");
+    }
 }
 
+// MIDDLEWARE VERIFY-TOKEN
 function verifytoken (req, res, next) {
+    
     const username = req.body.username;
-
     let tokenPresent = req.cookies.token;
 
     if(tokenPresent) {
     jwt.verify(tokenPresent, secretKey, (err, decoded) => {
         if(err){
-            res.status(401).send(err.message);
-        }
+            res.status(400).send(err.message);
+        } else {
         req.user = decoded;
-        console.log(req.user);
         next();
+        }
     })
-    }
+    } else 
     if(!username) {
         res.status(401).send("Input Username");
     }
-    next();
-}
+    else {
+        next();
+    }
+} 
 
-function checkExistance (req, res, next) {
+// MIDDLEWARE CHECKEXISTENCE
+function checkExistence (req, res, next) {
     let tokenPresent = req.cookies.token;
     
     if(!tokenPresent){
@@ -64,29 +109,22 @@ function checkExistance (req, res, next) {
         res.cookie("token", token);
         next();
     }
+    else {
         next();
+    }
 }
 
-
-app.post("/admin/signup", async (req, res) => {
-    let newAdmin = req.body;
-    let storedAdmin = await readFile("admin.json");
-    let adminCheck = storedAdmin.find(u => u.username == newAdmin.username && u.password == newAdmin.password);
-    if(adminCheck) {
-        res.status(401).send("Admin Already Exist");
-    }
-    else{
-        storedAdmin.push(newAdmin);
-        let update = await writeFile("admin.json",JSON.stringify(storedAdmin));
-        res.send(update);
-    }
+// ADMIN LOGIN END-POINT
+app.post("/admin/login", adminAuth, verifytoken, checkExistence, (req, res) => {
+   res.status(201).send("Login Successful");
 });
 
-app.post("/admin/login", adminAuth, verifytoken, checkExistance, (req, res) => {
+// END-POINT FOR STATE VARIABLE AT CLIENT SIDE
+app.get("/me", adminAuth, verifytoken, checkExistence, (req, res) => {
     res.json({username: req.user.username});
-    console.log(req.user.username);
 });
 
+// ADMIN ADD-COURSE END-POINT
 app.post("/admin/add-courses", verifytoken, async (req, res) => {
     let storedCourses = await readFile("courses.json");
     let newCourses = req.body;
@@ -95,12 +133,40 @@ app.post("/admin/add-courses", verifytoken, async (req, res) => {
     res.send(update);
 });
 
-app.get("/me", (req, res) => {
-    res.json({username: "TESTING"});
-    if(req.user) {
-        console.log(req.user.username)
-    }
-});
+// ASYNC READFILE FUYNCTION
+function readFile (file) {
+    return new Promise ((resolve, reject) => {
+        fs.readFile (file,"utf-8", (err, data) => {
+            if(err) {
+                reject(err.message);
+            }
+            else{
+                let storedAdmin = JSON.parse(data);
+                resolve(storedAdmin);
+            }
+        });
+    });
+}
+
+// ASYNC WRITEFILE FUNCTION
+function writeFile (file, data) {
+    return new Promise ((resolve, reject) => {
+        fs.writeFile(file, data, (err) => {
+            if(err){
+                reject(err.message);
+            }
+            resolve("Stored Successfully");
+        });
+    });
+}
+
+// FUNCTION FOR CREATING JWT TOKENS
+function createJWT (user) {
+    const token = jwt.sign(user, secretKey, { expiresIn: "1h"});
+    return token;
+}
+
+
 
 // app.put("/admin/update-courses", adminAuth, (req, res) => {
     
@@ -140,48 +206,3 @@ app.get("/me", (req, res) => {
 //     let storedCourses = await readFile("courses.json");
 //     res.send(courses.json);
 // });
-
-function readFile (file) {
-    return new Promise ((resolve, reject) => {
-        fs.readFile (file,"utf-8", (err, data) => {
-            if(err) {
-                reject(err);
-            }
-            else{
-                let storedAdmin = JSON.parse(data);
-                resolve(storedAdmin);
-            }
-        });
-    });
-}
-
-function writeFile (file, data) {
-    return new Promise ((resolve, reject) => {
-        fs.writeFile(file, data, (err) => {
-            if(err) {
-                reject(err);
-            }
-            else{
-                resolve("Stored Successfully");
-            }
-        });
-    });
-}
-
-async function adminAuth (req, res, next) {
-    const username = req.body.username;
-    let password = req.body.password;
-    if(username){
-    req.user = {username: username};
-    console.log(req.user);
-    let storedAdmin = await readFile("admin.json");
-    let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
-    if(adminCheck){
-        next();
-    }
-    else{
-        res.status(401).send("Authorization Failed");
-    }
-    }
-    next();
-}
