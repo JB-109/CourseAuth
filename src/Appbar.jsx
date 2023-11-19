@@ -6,6 +6,16 @@ function Appbar() {
 
     const navigate = useNavigate();
     const[user, setuser] = useState();
+    () => {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(`token=`)) {
+                return cookie.substring(token.length + 1);
+            }
+        }
+        return null;
+    };
 
     useEffect(() => {
         fetch("http://localhost:3000/me", {
@@ -21,6 +31,30 @@ function Appbar() {
             setuser(data.username);
         });
     }, []);
+
+    if(user) {
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "space-between"
+            }}>
+                <Typography variant={"h6"} style={{
+                    color: "white",
+                    marginLeft: 5,
+                }}>
+                    {user}
+                </Typography>
+
+                <button 
+                    onClick = {() => {
+                        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        navigate("/Signup");
+                    }}>
+                        LOG OUT
+                    </button>
+            </div>
+        )
+    }
 
     return (
         <div style={{
