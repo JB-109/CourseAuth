@@ -38,7 +38,7 @@ function Appbar() {
                 <button 
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        navigate("/Signup");
+                        window.location.reload();
                     }}>
                         LOG OUT
                     </button>

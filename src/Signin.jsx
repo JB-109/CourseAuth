@@ -59,6 +59,7 @@ function Signin() {
                     "content-type": "application/json"
                   }
               });
+              window.location = "/";
           }}>Sign In</Button>
           
         </Card>

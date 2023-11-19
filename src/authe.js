@@ -133,7 +133,13 @@ app.post("/admin/add-courses", verifytoken, async (req, res) => {
     res.send(update);
 });
 
-// ASYNC READFILE FUYNCTION
+// GET COURSES END-POINT
+app.get("/courses", verifytoken, async (req, res) => {
+    let storedCourses = await readFile("courses.json");
+    res.send(JSON.stringify(storedCourses));
+});
+
+// ASYNC READFILE FUNCTION
 function readFile (file) {
     return new Promise ((resolve, reject) => {
         fs.readFile (file,"utf-8", (err, data) => {
@@ -200,9 +206,4 @@ function createJWT (user) {
 
 // app.get("/user/login", userAuth, (req, res) => {
 //     res.send("Login Successful");
-// });
-
-// app.get("/user/courses", userAuth, async (req, res) => {
-//     let storedCourses = await readFile("courses.json");
-//     res.send(courses.json);
 // });

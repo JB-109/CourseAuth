@@ -27,8 +27,8 @@ function AddCourse() {
                 method: "POST",
                 credentials: 'include',
                 body: JSON.stringify({
-                    Title: Course,
-                    Description: Description
+                    title: Course,
+                    description: Description
                 }),
                 headers: {
                     "content-type": "application/json"
