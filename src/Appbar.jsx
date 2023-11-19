@@ -6,16 +6,6 @@ function Appbar() {
 
     const navigate = useNavigate();
     const[user, setuser] = useState();
-    () => {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(`token=`)) {
-                return cookie.substring(token.length + 1);
-            }
-        }
-        return null;
-    };
 
     useEffect(() => {
         fetch("http://localhost:3000/me", {
@@ -82,3 +72,15 @@ function Appbar() {
 }
 
 export default Appbar;
+
+// FOR PARSING THE COOKIE 
+// () => {
+    //     const cookies = document.cookie.split(';');
+    //     for (let i = 0; i < cookies.length; i++) {
+    //         const cookie = cookies[i].trim();
+    //         if (cookie.startsWith(`token=`)) {
+    //             return cookie.substring("token".length + 1);
+    //         }
+    //     }
+    //     return null;
+    // };
