@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-function Courses() {
+
+function Getcourses() {
+
     const [courses, setcourses] = useState();
 
     useEffect(() => {
@@ -10,19 +12,27 @@ function Courses() {
             headers: {
                 "content-type": "application/json"
             }
-        }).then(response => {
-            return response.json()}
-            ).then(data => {
-                setcourses(JSON.stringify(data));
-                console.log(JSON.stringify(data));
-            })
-        },[])
+        }).then(response => response.json()
+         ).then(data => {
+            setcourses(data);
+            console.log(data);
+        }).catch(error => {
+            console.error(error.message);
+        })
+    },[]);
 
     return (
         <div>
-            {courses}
+            {courses && courses.map((course, index) => (
+                <div key={index}>
+                    <h3>{course.title}</h3>
+                    <p>{course.description}</p>
+                </div>
+            ))}
         </div>
-    )
+    );
+
 }
 
-export default Courses;
+export default Getcourses;
+ 

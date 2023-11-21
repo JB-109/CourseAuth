@@ -17,7 +17,6 @@ function Appbar() {
         }).then(response => {
             return response.json()
         }).then(data => {
-            console.log(data);
             setuser(data.username);
         });
     }, []);
