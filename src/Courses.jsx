@@ -22,16 +22,8 @@ function Getcourses() {
     },[]);
 
     return (
-        <div>
-            {courses && courses.map((course, index) => (
-                <div key={index}>
-                    <h3>{course.title}</h3>
-                    <p>{course.description}</p>
-                </div>
-            ))}
-        </div>
-    );
-
+        {courses}
+    )
 }
 
 export default Getcourses;
