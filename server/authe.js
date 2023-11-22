@@ -25,37 +25,3 @@ app.use(requests);
 
 app.use("/admin", endPoints);
 
-
-// app.put("/admin/update-courses", adminAuth, (req, res) => {
-    
-// });
-
-// async function userAuth (req, res, next) {
-//     let user = req.headers;
-//     let storedUser = await readFile("users.json");
-//     let userCheck = storedUser.find(u => u.username == user.username && u.password == user.password);
-//     if(userCheck) {
-//         next();
-//     }
-//     else{
-//         res.status(401).send("User does not Exist");
-//     }
-// }
-
-// app.post("/user/signup", async (req, res) => {
-//     const newUser = req.body;
-//     let storedUser = await readFile("users.json");
-//     let userCheck = storedUser.find(u => u.username == newUser.username && u.password == newUser.password);
-//     if(userCheck) {
-//         res.status(401).send("User Already Exist");
-//     }
-//     else{
-//         storedUser.push(newUser);
-//         let update = await writeFile("users.json",JSON.stringify(storedUser));
-//         res.send(update);
-//     }
-// });
-
-// app.get("/user/login", userAuth, (req, res) => {
-//     res.send("Login Successful");
-// });

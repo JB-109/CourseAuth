@@ -35,7 +35,6 @@ router.post("/signup", async (req, res) => {
 // ADMIN LOGIN END-POINT
 router.post("/login", adminAuth, verifytoken, checkExistence, (req, res) => {
     res.status(201).send("Login Successful");
-    console.log("Login Successful");
 });
 
 

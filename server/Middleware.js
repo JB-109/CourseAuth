@@ -10,7 +10,6 @@ export async function adminAuth (req, res, next) {
     if(username){
     req.user = {username: username};
     let storedAdmin = await readFile("admin.json");
-    console.log(storedAdmin);
     let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
     if(adminCheck){
         next();
