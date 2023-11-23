@@ -2,10 +2,12 @@ import Signup from "./Signup";
 import Signin from "./Signin";
 import AddCourse from "./AddCourse";
 import Courses from "./Courses";
+import Counter from "./Counter";
 
 export const routes = [
     { path: "/Signup", element: <Signup/>},
-    { path: "/Courses", element: <Courses/>},
+    { path: "/admin/Courses", element: <Courses/>},
     { path: "/Signin", element: <Signin/>},
-    { path: "/addcourse", element: <AddCourse/>}
+    { path: "/admin/addcourse", element: <AddCourse/>},
+    { path: "/counter", element: <Counter/>}
 ];

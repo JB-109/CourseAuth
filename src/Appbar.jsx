@@ -1,27 +1,37 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Appbar() {
 
     const navigate = useNavigate();
-    const[user, setuser] = useState();
+    const [user, setuser] = useState();
+    const [isLoading, setisLoading] = useState(true);
+
 
     useEffect(() => {
-        fetch("http://localhost:3000/me", {
-            method: "GET",
-            headers: {
-                "content-type": "application/json"
-            },
-            credentials: "include",
-        }).then(response => {
-            return response.json()
-        }).then(data => {
-            setuser(data.username);
-        });
+        try {
+        const fetchData = async () => {
+            const response = await axios.get("http://localhost:3000/admin/me", {
+                withCredentials: true,
+            })
+            setuser(response.data.username);
+        }
+            fetchData();
+        } catch (error) {
+            console.error(error.message);
+        } finally {
+            setisLoading(false);
+        }
+
     }, []);
 
-    if(user) {
+    if (isLoading) {
+        return null;
+    }
+        {
+        if(user) {
         return (
             <div style={{
                 display: "flex",
@@ -43,9 +53,10 @@ function Appbar() {
                     </button>
             </div>
         )
-    }
+        }
+    
 
-    return (
+        return (
         <div style={{
             display: "flex",
             justifyContent: "space-between"
@@ -68,6 +79,7 @@ function Appbar() {
             </div>
         </div>
     )
+}
 }
 
 export default Appbar;

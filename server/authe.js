@@ -21,6 +21,7 @@ function requests (req, res, next) {
     console.log(`${totRequest}. ${req.method} ${req.url} ${new Date()}`);
     next();
 }
+
 app.use(requests);
 
 app.use("/admin", endPoints);

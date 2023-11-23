@@ -11,11 +11,11 @@ function Getcourses() {
 
         const fetchData = async () => {
             try {
-            const response = await axios.get("http://localhost:3000/courses",{
+            const response = await axios.get("http://localhost:3000/admin/courses",{
                 withCredentials: true,
             });
             setcourses(response.data);
-            console.log(response.data);
+            //console.log(response.data);
         } catch (error){
             console.error(error.message);
         }
@@ -26,9 +26,9 @@ function Getcourses() {
     return (
         courses.map((courses) => {
             counter++;
-            console.log(counter)
-            console.log(courses);
-            console.log(courses.title)
+           // console.log(counter)
+            //console.log(courses);
+            //console.log(courses.title)
             return <ShowCourses key={counter} courses={courses} />
             
         })
