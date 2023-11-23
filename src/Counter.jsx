@@ -1,43 +1,60 @@
 import { Card, Typography } from "@mui/material";
 import { useState } from "react";
 import Button from '@mui/material/Button';
+import { atom, RecoilRoot, useSetRecoilState, useRecoilValue } from "recoil";
+
+
+const counterState = atom({
+    key: "counter",
+    default: 0
+});
 
 function Counter () {
-
-    const [counter, setcounter] = useState(0);
-
     return (
         <div style={{display: "flex", justifyContent: "center", marginTop: 100}}>
+            <RecoilRoot>
             <Card style={{padding: 20, width: 500}}>
-                <Typography variant="h6" style={{display: "flex", justifyContent:"center"}}> Counter </Typography>
-                <Typography variant="h6" style={{display: "flex", justifyContent:"center"}}> {counter} </Typography>
-                <Buttons counter={counter} setcounter={setcounter}/>
+                <Typography variant="h6" style={{display: "flex", justifyContent:"center"}}>
+                    Counter </Typography>
+                <CurrentState/>
+                <Buttons/>
             </Card>
+            </RecoilRoot>
         </div>
     )
 }
 
-function Buttons({counter, setcounter}) {
+function CurrentState() {
+    const counter = useRecoilValue(counterState);
+    return (
+        <Typography variant="h6" style={{display: "flex", justifyContent:"center"}}> 
+            {counter} </Typography>
+    )
+}
+
+function Buttons() {
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <Increase counter={counter} setcounter={setcounter}/>
-            <Decrease counter={counter} setcounter={setcounter}/>
+            <Increase/>
+            <Decrease/>
         </div>
     )
 }
 
-function Increase({counter, setcounter}) {
+function Increase() {
+    const setcounter = useSetRecoilState(counterState);
     return (
         <Button variant="outlined" onClick={() => {
-            setcounter(counter + 1)
+            setcounter(ex => ex + 1);
         }}> Increase </Button>
     )
 }
 
-function Decrease({counter, setcounter}) {
+function Decrease() {
+    const setcounter = useSetRecoilState(counterState);
     return (
         <Button variant="outlined" onClick={() => {
-            setcounter(counter - 1)
+            setcounter(ex => ex - 1);
         }}> Decrease </Button>
     )
 }
