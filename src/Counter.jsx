@@ -3,13 +3,12 @@ import { useState } from "react";
 import Button from '@mui/material/Button';
 import { atom, RecoilRoot, useSetRecoilState, useRecoilValue } from "recoil";
 
-
 const counterState = atom({
     key: "counter",
     default: 0
 });
 
-function Counter () {
+function Counter() {
     return (
         <div style={{display: "flex", justifyContent: "center", marginTop: 100}}>
             <RecoilRoot>

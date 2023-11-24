@@ -23,6 +23,5 @@ function requests (req, res, next) {
 }
 
 app.use(requests);
-
 app.use("/admin", endPoints);
 

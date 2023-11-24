@@ -1,48 +1,44 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
-import axios from "axios";
-
+import { useState } from "react";
+//import { currentUser } from "./atoms/atoms";
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 
 function Appbar() {
 
     const navigate = useNavigate();
-    const [user, setuser] = useState();
-    const [isLoading, setisLoading] = useState(true);
+    // const [isLoading, setisLoading] = useState(true);
+    const [user, setuser] = useRecoilState(currentUser);
+
+    // const fetchData = async () => {
+    //     try {
+    //         const response = await axios.get("http://localhost:3000/admin/me", {
+    //             withCredentials: true,
+    //         })
+    //         setuser(response.data.username);
+    //     } catch {
+    //         console.error(error.message + " hi error");
+    //     } finally {
+    //         setisLoading(false);
+    //     }
+    // }  
+
+    // useEffect(() => {
+
+    //     fetchData();
+
+    // }, []);
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-        try {
-            console.log("1")
-            const response = await axios.get("http://localhost:3000/admin/me", {
-                withCredentials: true,
-            })
-            console.log(user + " before");
-            setuser(response.data.username);
-        } catch {
-            console.error(error.message + " hi error");
-        } finally {
-            console.log("2");
-            setisLoading(false);
-        }
-    }  
-    fetchData();
-    }, []);
-
-
-    if (isLoading) {
-        console.log(isLoading);
-        return null;
-    } else {
-        console.log(isLoading);
-        console.log(user);
+    // if (isLoading) {
+    //     return null;
+    // } else {
         if(user) {
-            console.log("hi user");
+            
         return (
             <div style={{
                 display: "flex",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
             }}>
                 <Typography variant={"h6"} style={{
                     color: "white",
@@ -51,35 +47,50 @@ function Appbar() {
                     {user}
                 </Typography>
 
+                <div>
+                <button
+                    onClick = {() => {navigate("/admin/courses");}}
+                    style={{marginRight: 5}}> COURSES
+                </button>
+
+                <button
+                    onClick = {() => {navigate("/admin/addcourse");}}
+                    style={{marginRight: 5}}> ADD COURSE
+                </button>
+
+                <button
+                    onClick = {() => {navigate("/counter")}}
+                    style={{marginRight: 5}}> COUNTER
+                </button>
                 <button 
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                         window.location = "/signin"
                     }}>
                         LOG OUT
-                    </button>
+                </button>
+                </div>
             </div>
-        )
+        );
         } else {
-            console.log("hii signup")
         return (
-        <div style={{
+        <div style={{ 
             display: "flex",
             justifyContent: "flex-end"
         }}>
                 <button 
                     onClick = {() => {navigate("/Signup");}} 
-                    style={{marginRight: "4px"}}> Sign Up
+                    style={{marginRight: "4px"}}> SIGN UP
                 </button>
                 <button 
                     onClick = {() => {navigate("/Signin");}}
-                    style = {{marginRight: "4px"}}> Sign In
+                    style = {{marginRight: "4px"}}> SIGN IN
                 </button>
         </div>
     )
 }
     }
-}
+
 
 
 export default Appbar;
