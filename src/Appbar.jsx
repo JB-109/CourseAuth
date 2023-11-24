@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 function Appbar() {
 
     const navigate = useNavigate();
@@ -11,27 +12,33 @@ function Appbar() {
 
 
     useEffect(() => {
-        try {
         const fetchData = async () => {
+        try {
+            console.log("1")
             const response = await axios.get("http://localhost:3000/admin/me", {
                 withCredentials: true,
             })
+            console.log(user + " before");
             setuser(response.data.username);
-        }
-            fetchData();
-        } catch (error) {
-            console.error(error.message);
+        } catch {
+            console.error(error.message + " hi error");
         } finally {
+            console.log("2");
             setisLoading(false);
         }
-
+    }  
+    fetchData();
     }, []);
 
+
     if (isLoading) {
+        console.log(isLoading);
         return null;
-    }
-        {
+    } else {
+        console.log(isLoading);
+        console.log(user);
         if(user) {
+            console.log("hi user");
         return (
             <div style={{
                 display: "flex",
@@ -47,40 +54,33 @@ function Appbar() {
                 <button 
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        window.location.reload();
+                        window.location = "/signin"
                     }}>
                         LOG OUT
                     </button>
             </div>
         )
-        }
-    
-
+        } else {
+            console.log("hii signup")
         return (
         <div style={{
             display: "flex",
-            justifyContent: "space-between"
+            justifyContent: "flex-end"
         }}>
-            
-
-            <Typography variant={"h6"} style={{
-                color: "white"
-            }}>{user}
-            </Typography>
-            <div>
                 <button 
                     onClick = {() => {navigate("/Signup");}} 
                     style={{marginRight: "4px"}}> Sign Up
                 </button>
                 <button 
                     onClick = {() => {navigate("/Signin");}}
-                    >Sign In
+                    style = {{marginRight: "4px"}}> Sign In
                 </button>
-            </div>
         </div>
     )
 }
+    }
 }
+
 
 export default Appbar;
 
@@ -95,3 +95,20 @@ export default Appbar;
     //     }
     //     return null;
     // };
+
+     // useEffect(() => {
+    //     try {
+    //     const fetchData = async () => {
+    //         const response = await axios.get("http://localhost:3000/admin/me", {
+    //             withCredentials: true,
+    //         })
+    //         setuser(response.data.username);
+    //     }
+    //         fetchData();
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     } finally {
+    //         setisLoading(false);
+    //     }
+
+    // }, []);

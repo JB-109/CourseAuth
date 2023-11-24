@@ -59,7 +59,7 @@ function Signin() {
                     "content-type": "application/json"
                   }
               });
-              window.location = "/admin"
+              window.location = "/counter"
           }}>Sign In</Button>
           
         </Card>
