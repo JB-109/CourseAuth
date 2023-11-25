@@ -2,17 +2,16 @@ import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { userDetails } from "./atoms/credentials";
-import { sCredentials } from "./selectors/sCredentials";
+import { user } from "./atoms/user";
 
 function Appbar() {
 
     const navigate = useNavigate();
-    const user = useRecoilValue(sCredentials);
-    console.log(user);
+    const [loggedInUser, setloggedInUser] = useRecoilState(user);
+    console.log(loggedInUser);
        
 
-        if(user) {  
+        if(loggedInUser) {  
         return (
             <div style={{
                 display: "flex",
@@ -22,7 +21,7 @@ function Appbar() {
                     color: "white",
                     marginLeft: 5,
                 }}>
-                    {user}
+                    {loggedInUser}
                 </Typography>
 
                 <div>
@@ -43,7 +42,7 @@ function Appbar() {
                 <button 
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        window.location = "/signin"
+                        setloggedInUser("");
                     }}>
                         LOG OUT
                 </button>

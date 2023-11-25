@@ -3,13 +3,17 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
+import axios from "axios";
+import { BASE_URL } from './config';
 //import { currentUser } from './atoms/atoms.jsx';
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { userDetails } from "./atoms/credentials";
+import { user } from './atoms/user';
 
 function Signin() {
   const [username, setusername] = useState();
   const [password, setpassword] = useState();
+  const [loggedInUser, setLoggedInUser] = useRecoilState(user);
 
   return (
     <div>
@@ -51,21 +55,22 @@ function Signin() {
           <Button 
             size="large" 
             variant="outlined" 
-            onClick={()=> {
-               fetch("http://localhost:3000/admin/login", {
-                  method: "POST",
-                  credentials: "include",
-                  body: JSON.stringify({
+            onClick={async ()=> {
+              try {
+                const response = await axios.post(`${BASE_URL}/admin/login`,
+                  { 
                     username: username,
-                    password: password,
-                  }),
-                  headers: {
-                    "content-type": "application/json"
+                    password: password
+                  },
+                  {
+                    withCredentials: true
                   }
-              });
-              // window.location = "/"
-          }}>Sign In</Button>
-          
+                )
+                setLoggedInUser(username);
+              } catch (error) {
+                console.error(error.message);
+              }
+            }}>Sign In</Button>
         </Card>
         
       </div>
