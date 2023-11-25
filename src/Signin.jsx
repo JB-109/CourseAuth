@@ -8,10 +8,8 @@ import { useRecoilState } from "recoil";
 import { userDetails } from "./atoms/credentials";
 
 function Signin() {
-  // const [Username, setUsername] = useState();
-  // const [Password, setPassword] = useState();
-  const [credentials, setcredentials] = useRecoilState(userDetails);
-  console.log(credentials);
+  const [username, setusername] = useState();
+  const [password, setpassword] = useState();
 
   return (
     <div>
@@ -39,21 +37,14 @@ function Signin() {
 
         <Card variant="outlined" style={{width: 400, height: 190, padding: "20px"}}>
 
-          <TextField fullWidth={true} id="Username" label="Username" variant="outlined"onChange={(e) => {
-            setcredentials((prevCredentials) => ({
-              ...prevCredentials,
-              username: e.target.value,
-            }));
-          
+          <TextField fullWidth={true} id="Username" label="Username" variant="outlined" onBlur={(e) => {
+            setusername(e.target.value);
           }}/>
 
+
           <br/><br/>
-          <TextField fullWidth={true} id="Password" label="Password" variant="outlined" type="password" onChange={(e) => {
-            setcredentials((prevCredentials) => ({
-              ...prevCredentials,
-              password: e.target.value,
-            }));
-          
+          <TextField fullWidth={true} id="Password" label="Password" variant="outlined" type="password" onBlur={(e) => {
+            setpassword(e.target.value);
           }}/>
 
           <br/><br/>
@@ -65,14 +56,14 @@ function Signin() {
                   method: "POST",
                   credentials: "include",
                   body: JSON.stringify({
-                    username: credentials.username,
-                    password: credentials.password,
+                    username: username,
+                    password: password,
                   }),
                   headers: {
                     "content-type": "application/json"
                   }
               });
-              //window.location = "/"
+              // window.location = "/"
           }}>Sign In</Button>
           
         </Card>

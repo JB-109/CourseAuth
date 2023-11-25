@@ -8,7 +8,7 @@ function App() {
 
   return (  
     <div style={{
-      backgroundColor: "#5a4777",
+      backgroundColor: "#302c2c",
       margin: 0,
       padding: 0,
       height: "100vh",
@@ -16,7 +16,7 @@ function App() {
     }}>
       <RecoilRoot>
         <Router>
-          {/* <Appbar/> */}
+          <Appbar/>
             <Routes>
               {routes.map((route, index) => (
                 <Route key={index} {...route} />

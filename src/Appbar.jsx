@@ -1,40 +1,18 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
-//import { currentUser } from "./atoms/atoms";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { userDetails } from "./atoms/credentials";
+import { sCredentials } from "./selectors/sCredentials";
 
 function Appbar() {
 
     const navigate = useNavigate();
-    // const [isLoading, setisLoading] = useState(true);
-    const [user, setuser] = useRecoilState(currentUser);
+    const user = useRecoilValue(sCredentials);
+    console.log(user);
+       
 
-    // const fetchData = async () => {
-    //     try {
-    //         const response = await axios.get("http://localhost:3000/admin/me", {
-    //             withCredentials: true,
-    //         })
-    //         setuser(response.data.username);
-    //     } catch {
-    //         console.error(error.message + " hi error");
-    //     } finally {
-    //         setisLoading(false);
-    //     }
-    // }  
-
-    // useEffect(() => {
-
-    //     fetchData();
-
-    // }, []);
-
-
-    // if (isLoading) {
-    //     return null;
-    // } else {
-        if(user) {
-            
+        if(user) {  
         return (
             <div style={{
                 display: "flex",
@@ -87,9 +65,9 @@ function Appbar() {
                     style = {{marginRight: "4px"}}> SIGN IN
                 </button>
         </div>
-    )
+        )
+        }
 }
-    }
 
 
 
@@ -106,20 +84,3 @@ export default Appbar;
     //     }
     //     return null;
     // };
-
-     // useEffect(() => {
-    //     try {
-    //     const fetchData = async () => {
-    //         const response = await axios.get("http://localhost:3000/admin/me", {
-    //             withCredentials: true,
-    //         })
-    //         setuser(response.data.username);
-    //     }
-    //         fetchData();
-    //     } catch (error) {
-    //         console.error(error.message);
-    //     } finally {
-    //         setisLoading(false);
-    //     }
-
-    // }, []);
