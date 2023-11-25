@@ -1,16 +1,40 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRecoilState } from "recoil";
 import { user } from "./atoms/user";
+import { BASE_URL } from "./config";
+import { aisloading } from "./atoms/isLoading";
 
 function Appbar() {
 
     const navigate = useNavigate();
     const [loggedInUser, setloggedInUser] = useRecoilState(user);
+    const [isLoading, setisLoading] = useRecoilState(aisloading);
+    console.log(isLoading);
     console.log(loggedInUser);
-       
 
+    useEffect(() => {
+        async function fetchData() {
+        try {
+        await axios.get(`${BASE_URL}/admin/me`,{
+            withCredentials: true
+        }).then(response => {
+            setloggedInUser(response.data.username);
+        });
+        } catch (err) {
+            console.error(err.message);
+        } finally {
+            setisLoading(false);
+        }
+        }
+        fetchData();
+    }, []);
+       
+    if(isLoading) {
+        return null;
+    }
         if(loggedInUser) {  
         return (
             <div style={{
@@ -43,6 +67,7 @@ function Appbar() {
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                         setloggedInUser("");
+                        navigate("/dashboard");
                     }}>
                         LOG OUT
                 </button>

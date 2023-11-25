@@ -1,6 +1,6 @@
 import React from 'react';
 import Appbar from './Appbar';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { routes } from './routes';
 import { RecoilRoot } from "recoil"; 
 

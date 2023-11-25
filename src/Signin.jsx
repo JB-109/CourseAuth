@@ -3,14 +3,14 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from './config';
-//import { currentUser } from './atoms/atoms.jsx';
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { userDetails } from "./atoms/credentials";
 import { user } from './atoms/user';
 
 function Signin() {
+  const navigate = useNavigate();
   const [username, setusername] = useState();
   const [password, setpassword] = useState();
   const [loggedInUser, setLoggedInUser] = useRecoilState(user);
@@ -69,6 +69,8 @@ function Signin() {
                 setLoggedInUser(username);
               } catch (error) {
                 console.error(error.message);
+              } finally {
+                navigate("/dashboard")
               }
             }}>Sign In</Button>
         </Card>
