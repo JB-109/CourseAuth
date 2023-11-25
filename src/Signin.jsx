@@ -66,7 +66,10 @@ function Signin() {
                     withCredentials: true
                   }
                 )
-                setLoggedInUser(username);
+                setLoggedInUser((ex) => ({
+                  ...ex,
+                  user: username
+                }));
               } catch (error) {
                 console.error(error.message);
               } finally {

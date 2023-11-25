@@ -28,7 +28,7 @@ function GreyTopper() {
             height: 90
         }}>
             <Typography variant="h6">
-                Welcome {loggedInUser}
+                Welcome {loggedInUser.user}
             </Typography>
         </div>
     )

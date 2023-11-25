@@ -5,15 +5,11 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import { user } from "./atoms/user";
 import { BASE_URL } from "./config";
-import { aisloading } from "./atoms/isLoading";
 
 function Appbar() {
 
     const navigate = useNavigate();
     const [loggedInUser, setloggedInUser] = useRecoilState(user);
-    const [isLoading, setisLoading] = useRecoilState(aisloading);
-    console.log(isLoading);
-    console.log(loggedInUser);
 
     useEffect(() => {
         async function fetchData() {
@@ -21,21 +17,27 @@ function Appbar() {
         await axios.get(`${BASE_URL}/admin/me`,{
             withCredentials: true
         }).then(response => {
-            setloggedInUser(response.data.username);
+            setloggedInUser((ex) => ({
+                ...ex, 
+                user: response.data.username
+            }));
         });
         } catch (err) {
             console.error(err.message);
         } finally {
-            setisLoading(false);
+            setloggedInUser((ex) => ({
+                ...ex,
+                isLoading: false
+            }));
         }
         }
         fetchData();
     }, []);
        
-    if(isLoading) {
+    if(loggedInUser.isLoading) {
         return null;
     }
-        if(loggedInUser) {  
+        if(loggedInUser.user) {  
         return (
             <div style={{
                 display: "flex",
@@ -45,7 +47,7 @@ function Appbar() {
                     color: "white",
                     marginLeft: 5,
                 }}>
-                    {loggedInUser}
+                    {loggedInUser.user}
                 </Typography>
 
                 <div>
@@ -66,7 +68,10 @@ function Appbar() {
                 <button 
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        setloggedInUser("");
+                        setloggedInUser((ex) => ({
+                            ...ex,
+                            user: ""
+                        }));
                         navigate("/dashboard");
                     }}>
                         LOG OUT
