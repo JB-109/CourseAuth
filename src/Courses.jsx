@@ -15,20 +15,17 @@ function Getcourses() {
                 withCredentials: true,
             });
             setcourses(response.data);
-            //console.log(response.data);
         } catch (error){
             console.error(error.message);
-        }
-        }
+        } }
         fetchData();
+
 },[]);
+
     let counter = 0;
     return (
         courses.map((courses) => {
             counter++;
-           // console.log(counter)
-            //console.log(courses);
-            //console.log(courses.title)
             return <ShowCourses key={counter} courses={courses} />
             
         })
@@ -38,15 +35,17 @@ function Getcourses() {
 function ShowCourses(props) {
     return (
         <div style={{
-            display: "flex"
+            display: "flex",
+            flexDirection: "row",
         }}>
-        <Card style={{width: 300, height: 40, display: "flex",}}>
+        <Card style={{width: 170, height: 250, paddingLeft: 22.5, display: "flex", flexWrap: "wrap"}}>
             <Typography variant="h6">
                 {props.courses.title}
             </Typography> 
             <Typography variant="subtitle1">
                 {props.courses.description}
             </Typography>
+            <img src="https://tnpsc.googlecraft.com/Thumbnail.jpg"/>
         </Card>
         </div>
     )
@@ -54,19 +53,3 @@ function ShowCourses(props) {
 
 
 export default Getcourses;
-
-
- // fetch("http://localhost:3000/courses", {
-        //     method: "GET",
-        //     credentials: "include",
-        //     headers: {
-        //         "content-type": "application/json"
-        //     }
-        // }).then(response => response.json()
-        //  ).then(data => {
-        //     setcourses(data);
-        //     console.log(data);
-        // }).catch(error => {
-        //     console.error(error.message);
-        // });
-        

@@ -23,6 +23,7 @@ function Appbar() {
             }));
         });
         } catch (err) {
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             console.error(err.message);
         } finally {
             setloggedInUser((ex) => ({
@@ -40,8 +41,10 @@ function Appbar() {
         if(loggedInUser.user) {  
         return (
             <div style={{
+                backgroundColor: "#363636",
                 display: "flex",
                 justifyContent: "space-between",
+                padding: 5
             }}>
                 <Typography variant={"h6"} style={{
                     color: "white",
@@ -51,6 +54,11 @@ function Appbar() {
                 </Typography>
 
                 <div>
+                <button
+                    onClick = {() => {navigate("/dashboard");}}
+                    style={{marginRight: 5}}> DASHBOARD
+                </button>
+
                 <button
                     onClick = {() => {navigate("/admin/courses");}}
                     style={{marginRight: 5}}> COURSES

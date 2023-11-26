@@ -6,7 +6,7 @@ function Dashboard() {
 
     return (
         <div style={{
-            backgroundColorcolor: "#032d5e",
+            backgroundColor: "white",
             height: "100vh",
             width: "100vw",
             margin: 0,
@@ -23,9 +23,11 @@ function GreyTopper() {
 
     return (
         <div style={{
+            backgroundColor: "grey",
             display: "flex",
             justifyContent: "center",
-            height: 90
+            height: 100,
+            padding: 100
         }}>
             <Typography variant="h6">
                 Welcome {loggedInUser.user}

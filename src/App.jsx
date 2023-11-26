@@ -8,7 +8,7 @@ function App() {
 
   return (  
     <div style={{
-      backgroundColor: "#302c2c",
+      backgroundColor: "#195e83",
       margin: 0,
       padding: 0,
       height: "100vh",
