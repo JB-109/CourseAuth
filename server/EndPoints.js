@@ -1,29 +1,35 @@
 import express from "express";
-import { adminAuth, verifytoken, checkExistence, createJWT } from "./Middleware.js";
-import { readFile, writeFile } from "./db.js";
+import { adminAuth, verifytoken, checkExistence } from "./Middleware.js";
+import { admin, courses } from "./db.js";
 
 const router = express.Router();
 
 // ADMIN END-POINT
 router.get("/", adminAuth, async (req, res) => {
-    let storedAdmin = await readFile("admin.json");
+    try {
+    const getStoredAdmin = admin.find().exec();
+    const storedAdmin = getStoredAdmin.map(c => c.toJSON());
     res.send(storedAdmin);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 
 // ADMIN SIGN-UP END-POINT
 router.post("/signup", async (req, res) => {
     try {
-    let newAdmin = req.body;
-    let storedAdmin = await readFile("admin.json");
-    let adminCheck = storedAdmin.find(u => u.username == newAdmin.username && u.password == newAdmin.password);
-    if(adminCheck) {
+    let username = req.body.username;
+    let password = req.body.password;
+    let storedAdmin = await admin.findOne({username});
+    if(storedAdmin) {
         res.status(409).send("Admin Already Exist");
     }
     else{
-        storedAdmin.push(newAdmin);
-        let update = await writeFile("admin.json",JSON.stringify(storedAdmin));
-        res.status(201).send(update);
+        const newAdmin = new admin({username: username, password: password});
+        await newAdmin.save();
+        res.status(201).send("Welcome " + username);
     }
     } catch (error) {
         console.error(error.message);
@@ -46,18 +52,22 @@ router.get("/me", adminAuth, verifytoken, checkExistence, (req, res) => {
 
 // ADMIN ADD-COURSE END-POINT
 router.post("/add-courses", verifytoken, async (req, res) => {
-    let storedCourses = await readFile("courses.json");
-    let newCourses = req.body;
-    storedCourses.push(newCourses);
-    let update = await writeFile("courses.json",JSON.stringify(storedCourses));
-    res.send(update);
+    const newCourse = new courses({title: req.body.title, description: req.body.description});
+    await newCourse.save();
+    res.status(201).send("Course Added Successfully");
 });
+
 
 
 // GET COURSES END-POINT
 router.get("/courses", verifytoken, async (req, res) => {
-    let storedCourses = await readFile("courses.json");
-    res.send(JSON.stringify(storedCourses));
+    try {
+    const getStoredCourses = await courses.find().exec();
+    res.status(201).send(getStoredCourses);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Internal Serevre Error");
+    }
 });
 
 export default router;

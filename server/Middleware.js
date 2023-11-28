@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 const secretKey = 'JITESHBANSAL';
-import {readFile} from "./db.js";
+import { admin } from "./db.js";
+
 
 // MIDDLEWARE ADMIN-AUTH
 export async function adminAuth (req, res, next) {
@@ -9,9 +10,8 @@ export async function adminAuth (req, res, next) {
     let password = req.body.password;
     if(username){
     req.user = {username: username};
-    let storedAdmin = await readFile("admin.json");
-    let adminCheck = storedAdmin.find(a => a.username == username && a.password == password);
-    if(adminCheck){
+    const storedAdmin = await admin.findOne({username, password});
+    if(storedAdmin){
         next();
     }
     else{
