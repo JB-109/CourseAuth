@@ -4,6 +4,7 @@ import AddCourse from "./AddCourse";
 import Courses from "./Courses";
 import Counter from "./Counter";
 import Dashboard from "./Dashboard";
+import React from "react";
 
 export const routes = [
     { path: "/Signup", element: <Signup/>},

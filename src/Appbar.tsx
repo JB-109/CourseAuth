@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { user } from "./atoms/user";
-import { BASE_URL } from "./config";
+import { BASE_URL } from "../server/config";
+import React from "react";
 
 function Appbar() {
 

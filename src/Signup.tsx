@@ -3,10 +3,11 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
+import React from "react";
 
 function Signup() {
-  const [Username, setUsername] = useState();
-  const [Password, setPassword] = useState();
+  const [Username, setUsername] = useState<string | undefined>();
+  const [Password, setPassword] = useState<string | undefined>();
 
   return (
     <div> 

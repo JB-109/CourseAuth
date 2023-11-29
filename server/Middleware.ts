@@ -1,15 +1,17 @@
-import jwt from "jsonwebtoken";
+import jwt, { VerifyErrors } from "jsonwebtoken";
+
 const secretKey = 'JITESHBANSAL';
 import { admin } from "./db.js";
-
+import { NextFunction, Request, Response } from "express";
 
 // MIDDLEWARE ADMIN-AUTH
-export async function adminAuth (req, res, next) {
+export async function adminAuth (req: Request, res: Response, next: NextFunction) {
     try {
     const username = req.body.username;
     let password = req.body.password;
     if(username){
-    req.user = {username: username};
+    req.headers["user"] = username;
+    console.log(username + " hi")
     const storedAdmin = await admin.findOne({username, password});
     if(storedAdmin){
         next();
@@ -21,24 +23,24 @@ export async function adminAuth (req, res, next) {
     next();
     }
     } catch (error) {
-        console.error(error.message);
+        console.error((error as Error).message);
         res.status(401).send("error at ADMIN-AUTH");
     }
 }
 
 
 // MIDDLEWARE VERIFY-TOKEN
-export function verifytoken (req, res, next) {
+export function verifytoken (req: Request, res: Response, next: NextFunction) {
     
     const username = req.body.username;
     let tokenPresent = req.cookies.token;
 
     if(tokenPresent) {
-    jwt.verify(tokenPresent, secretKey, (err, decoded) => {
+    jwt.verify(tokenPresent, secretKey, (err: VerifyErrors | null, decoded: object | string | undefined) => {
         if(err){
             res.status(400).send(err.message);
         } else {
-        req.user = decoded;
+        req.headers["user"] = username;
         next();
         }
     })
@@ -53,7 +55,7 @@ export function verifytoken (req, res, next) {
 
 
 // MIDDLEWARE CHECKEXISTENCE
-export function checkExistence (req, res, next) {
+export function checkExistence (req: Request, res: Response, next: NextFunction) {
     let tokenPresent = req.cookies.token;
     
     if(!tokenPresent){
@@ -69,7 +71,7 @@ export function checkExistence (req, res, next) {
 
 
 // FUNCTION FOR CREATING JWT TOKENS
-export function createJWT (user) {
-    const token = jwt.sign(user, secretKey, { expiresIn: "1h"});
+export function createJWT (user: string) {
+    const token = jwt.sign(user, secretKey, { expiresIn: "0.5h"});
     return token;
 }

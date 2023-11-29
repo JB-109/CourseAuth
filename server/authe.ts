@@ -1,9 +1,9 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 const app = express();
 const port = 3000;
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import endPoints from "../server/EndPoints.js";
+import endPoints from "./EndPoints.js";
 
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:5173"}));
@@ -16,7 +16,7 @@ const server = app.listen(port, () => {
 
 // SERVER LOGS
 let totRequest = 0;
-function requests (req, res, next) {
+function requests (req: Request, res: Response, next: NextFunction) {
     totRequest += 1;
     console.log(`${totRequest}. ${req.method} ${req.url} ${new Date()}`);
     next();

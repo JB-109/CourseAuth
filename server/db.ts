@@ -17,6 +17,12 @@ export const courses = mongoose.model("courses", courseSchema);
 
 mongoose.connect(uri);
 
+
+
+
+
+
+
 // // ASYNC READFILE FUNCTION
 // export function readFile (file) {
 //     return new Promise ((resolve, reject) => {

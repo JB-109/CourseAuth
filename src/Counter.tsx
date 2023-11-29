@@ -2,6 +2,7 @@ import { Card, Typography } from "@mui/material";
 import { useState } from "react";
 import Button from '@mui/material/Button';
 import { atom, RecoilRoot, useSetRecoilState, useRecoilValue } from "recoil";
+import React from "react";
 
 const counterState = atom({
     key: "counter",

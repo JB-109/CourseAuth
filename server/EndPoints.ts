@@ -7,11 +7,10 @@ const router = express.Router();
 // ADMIN END-POINT
 router.get("/", adminAuth, async (req, res) => {
     try {
-    const getStoredAdmin = admin.find().exec();
-    const storedAdmin = getStoredAdmin.map(c => c.toJSON());
-    res.send(storedAdmin);
+    const getStoredAdmin = await admin.find().exec();
+    res.send(getStoredAdmin);
     } catch (err) {
-        console.error(err.message);
+        console.error((err as Error).message);
         res.status(500).send("Internal Server Error");
     }
 });
@@ -32,7 +31,7 @@ router.post("/signup", async (req, res) => {
         res.status(201).send("Welcome " + username);
     }
     } catch (error) {
-        console.error(error.message);
+        console.error((error as Error).message);
         res.status(500).send("error at ADMIN-SIGNUP");
     }
 });
@@ -46,7 +45,9 @@ router.post("/login", adminAuth, verifytoken, checkExistence, (req, res) => {
 
 // END-POINT FOR STATE VARIABLE AT CLIENT SIDE
 router.get("/me", adminAuth, verifytoken, checkExistence, (req, res) => {
-    res.json({username: req.user.username});
+    const username = req.headers["user"];
+    res.status(200).send(username);
+    console.log(username);
 });
 
 
@@ -65,7 +66,7 @@ router.get("/courses", verifytoken, async (req, res) => {
     const getStoredCourses = await courses.find().exec();
     res.status(201).send(getStoredCourses);
     } catch (err) {
-        console.error(err.message);
+        console.error((err as Error).message);
         res.status(500).send("Internal Serevre Error");
     }
 });

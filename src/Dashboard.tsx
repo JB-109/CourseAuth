@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material"
 import { user } from "./atoms/user"
 import { useRecoilValue } from "recoil";
+import React from "react";
 
 function Dashboard() {
 

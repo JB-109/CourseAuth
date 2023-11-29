@@ -5,8 +5,8 @@ import { useState } from 'react';
 import Card from '@mui/material/Card';
 
 function AddCourse() {
-    const[Course, setCourse] = useState();
-    const[Description, setDescription] =  useState();
+    const[Course, setCourse] = useState<string | undefined>();
+    const[Description, setDescription] =  useState<string | undefined>();
     return (
         <div style={{
             display: "flex",
