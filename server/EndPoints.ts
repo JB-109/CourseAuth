@@ -46,8 +46,7 @@ router.post("/login", adminAuth, verifytoken, checkExistence, (req, res) => {
 // END-POINT FOR STATE VARIABLE AT CLIENT SIDE
 router.get("/me", adminAuth, verifytoken, checkExistence, (req, res) => {
     const username = req.headers["user"];
-    res.status(200).send(username);
-    console.log(username);
+    res.status(200).send({username: username});
 });
 
 

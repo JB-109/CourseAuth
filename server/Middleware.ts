@@ -11,7 +11,6 @@ export async function adminAuth (req: Request, res: Response, next: NextFunction
     let password = req.body.password;
     if(username){
     req.headers["user"] = username;
-    console.log(username + " hi")
     const storedAdmin = await admin.findOne({username, password});
     if(storedAdmin){
         next();
@@ -36,11 +35,11 @@ export function verifytoken (req: Request, res: Response, next: NextFunction) {
     let tokenPresent = req.cookies.token;
 
     if(tokenPresent) {
-    jwt.verify(tokenPresent, secretKey, (err: VerifyErrors | null, decoded: object | string | undefined) => {
+    jwt.verify(tokenPresent, secretKey, (err: VerifyErrors | null, decoded: any) => {
         if(err){
             res.status(400).send(err.message);
         } else {
-        req.headers["user"] = username;
+        req.headers["user"] = decoded.username;
         next();
         }
     })
