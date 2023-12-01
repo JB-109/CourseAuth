@@ -28,7 +28,7 @@ function Signin() {
         <Typography variant={"h6"} style={{
           color: "white"
         }}>
-             Welcome back to Tunnel, Signin Below
+             Welcome back to Tunnel, SignIn Below
         </Typography>
 
       </div>
