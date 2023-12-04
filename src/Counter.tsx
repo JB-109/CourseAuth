@@ -35,8 +35,8 @@ function CurrentState() {
 function Buttons() {
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <Increase/>
             <Decrease/>
+            <Increase/>
         </div>
     )
 }
@@ -45,8 +45,8 @@ function Increase() {
     const setcounter = useSetRecoilState(counterState);
     return (
         <Button variant="outlined" onClick={() => {
-            setcounter(ex => ex - 1);
-        }}> Decrease </Button>
+            setcounter(ex => ex + 1);
+        }}> Increase </Button>
     )
 }
 
@@ -54,8 +54,8 @@ function Decrease() {
     const setcounter = useSetRecoilState(counterState);
     return (
         <Button variant="outlined" onClick={() => {
-            setcounter(ex => ex + 1);
-        }}> Increase </Button>
+            setcounter(ex => ex - 1);
+        }}> Decrease </Button>
     )
 }
 
