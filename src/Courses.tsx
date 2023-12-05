@@ -23,11 +23,11 @@ function Getcourses() {
 
 },[]);
 
-    let counter = 0;
+    let id = 0;
     return (
         courses.map((courses) => {
-            counter++;
-            return <ShowCourses key={counter} courses={courses} />
+            id++;
+            return <ShowCourses key={id} courses={courses} />
             
         })
     )
