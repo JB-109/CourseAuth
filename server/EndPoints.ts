@@ -18,6 +18,7 @@ router.get("/", adminAuth, async (req, res) => {
 
 // ADMIN SIGN-UP END-POINT
 router.post("/signup", async (req, res) => {
+    
     try {
     let username = req.body.username;
     let password = req.body.password;
