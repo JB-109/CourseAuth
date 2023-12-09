@@ -11,8 +11,10 @@ const courseSchema = new mongoose.Schema({
     title: String,
     description: String
 });
-
+// Schema for Admin
 export const admin = mongoose.model("admin", adminSchema);
+
+// Schema for Courses
 export const courses = mongoose.model("courses", courseSchema);
 
 mongoose.connect(uri);
