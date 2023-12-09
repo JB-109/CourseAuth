@@ -11,7 +11,7 @@ router.get("/", adminAuth, async (req, res) => {
     res.send(getStoredAdmin);
     } catch (err) {
         console.error((err as Error).message);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Internal Server Error at ADMIN-AUTH");
     }
 });
 
@@ -67,7 +67,7 @@ router.get("/courses", verifytoken, async (req, res) => {
     res.status(201).send(getStoredCourses);
     } catch (err) {
         console.error((err as Error).message);
-        res.status(500).send("Internal Serevre Error");
+        res.status(500).send("Internal Serevre Error at VERIFY-TOKEN");
     }
 });
 
