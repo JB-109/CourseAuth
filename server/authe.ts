@@ -1,27 +1,21 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 const app = express();
 const port = 3000;
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import endPoints from "./EndPoints.js";
+import { requests } from "./Middleware.js";
 
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173"}));
 app.use(cookieParser());
+app.use(requests);
+app.use(cors({ credentials: true, origin: "http://localhost:5173", maxAge: 86400}));
 
 // SERVER
 const server = app.listen(port, () => {
     console.log(`Server Started at Port ${port}`);
 });
 
-// SERVER LOGS
-let totRequest = 0;
-function requests (req: Request, res: Response, next: NextFunction) {
-    totRequest += 1;
-    console.log(`${totRequest}. ${req.method} ${req.url} ${new Date()}`);
-    next();
-}
-
-app.use(requests);
+// END-POINTS
 app.use("/admin", endPoints);
 

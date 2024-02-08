@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const uri = "mongodb+srv://JB109:Konibero99@ed.gihi7db.mongodb.net/";
 
 const adminSchema = new mongoose.Schema({
