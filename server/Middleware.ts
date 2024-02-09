@@ -16,12 +16,12 @@ export function requests (req: Request, res: Response, next: NextFunction): void
 // MIDDLEWARE ADMIN-AUTH
 export async function adminAuth (req: Request, res: Response, next: NextFunction) {
     
-    let username = req.body.username;
-    let password =  req.body.password;
+    try {
+        let username = req.body.username;
+        let password =  req.body.password;
 
     if(username){
         let storedAdmin = await db.admin.findOne({username: username, password: password});
-        console.log(storedAdmin);
         if(storedAdmin){
             next();
         } else {
@@ -30,39 +30,47 @@ export async function adminAuth (req: Request, res: Response, next: NextFunction
     } else {
         next();
     }
+    } catch (err) {
+        console.error((err as Error).message);
+        res.status(401).send("Error at AdminAuth");
+    }
 }
 
 
 // MIDDLEWARE VERIFY-TOKEN
 export function verifytoken (req: Request, res: Response, next: NextFunction) {
     
-    const username = req.body.username;
-    let tokenPresent = req.cookies.token;
+    try {
+        const username = req.body.username;
+        let tokenPresent = req.cookies.token;
 
     if(tokenPresent) {
     jwt.verify(tokenPresent, secretKey, (err: VerifyErrors | null, decoded: any) => {
         if(err){
             res.status(400).send(err.message);
         } else {
-        req.headers["user"] = decoded.username;
-        console.log(decoded.username);
-        console.log(decoded);
-        next();
+            req.headers["user"] = decoded.username;
+            next();
         }
     })
-    } else 
-    if(!username) {
+    } else if(!username) {
         res.status(401).send("Input Username");
     }
     else {
         next();
+    }
+    } catch (err) {
+        console.error((err as Error).message);
+        res.status(401).send("Error at VerifyToken")
     }
 } 
 
 
 // MIDDLEWARE CHECKEXISTENCE
 export function checkExistence (req: Request, res: Response, next: NextFunction) {
-    let tokenPresent = req.cookies.token;
+
+    try {
+        let tokenPresent = req.cookies.token;
     
     if(!tokenPresent){
         let newAdmin = req.body.username;
@@ -73,12 +81,21 @@ export function checkExistence (req: Request, res: Response, next: NextFunction)
     else {
         next();
     }
+    } catch (err) {
+        console.error((err as Error).message);
+        res.status(401).send("Error at CheckExistence");
+    }
 }
 
 
 // FUNCTION FOR CREATING JWT TOKENS
 export function createJWT (user: string) {
+
+    try {
     const payload = {username: user};
     const token = jwt.sign(payload, secretKey, { expiresIn: "0.5h"});
     return token;
+    } catch (err) {
+        console.error((err as Error).message);
+    }
 }
