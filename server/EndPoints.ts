@@ -34,7 +34,6 @@ router.post("/signup", async (req, res) => {
         try {
         let token = createJWT(username);
         res.cookie("token", token);
-        console.log(token);
         } catch (err) {
             console.error((err as Error).message);
         }
@@ -56,6 +55,7 @@ router.post("/login", adminAuth, verifytoken, checkExistence, (req, res) => {
 // END-POINT FOR STATE VARIABLE AT CLIENT SIDE
 router.get("/me", adminAuth, verifytoken, checkExistence, (req, res) => {
     const username = req.headers["user"];
+    console.log(username);
     res.status(200).send({username: username});
 });
 
