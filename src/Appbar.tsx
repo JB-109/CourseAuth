@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { user } from "./atoms/user";
+import { currentUser } from "./atoms/user";
 import { BASE_URL } from "../server/config";
 import React from "react";
 
@@ -11,7 +11,7 @@ import React from "react";
 function Appbar() {
 
     const navigate = useNavigate();
-    const [loggedInUser, setloggedInUser] = useRecoilState(user);
+    const [loggedInUser, setloggedInUser] = useRecoilState(currentUser);
 
     useEffect(() => {
         async function fetchData() {

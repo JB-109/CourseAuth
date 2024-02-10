@@ -1,12 +1,8 @@
 import { atom } from "recoil";
+import { userInterface } from "../Interface/currentUser";
 
-interface userInterface {
-    user: string | undefined,
-    isLoading: boolean 
-}
-
-export const user = atom<userInterface>({
-    key: "user",
+export const currentUser = atom<userInterface>({
+    key: "currentUser",
     default: {
         user: "",
         isLoading: true
