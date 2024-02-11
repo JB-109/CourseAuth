@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material"
-import { user } from "./atoms/user"
+import { currentUser } from "./atoms/user"
 import { useRecoilValue } from "recoil";
 import React from "react";
 
@@ -20,7 +20,7 @@ function Dashboard() {
 
 function GreyTopper() {
 
-    const loggedInUser = useRecoilValue(user);
+    const loggedInUser = useRecoilValue(currentUser);
 
     return (
         <div style={{

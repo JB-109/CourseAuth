@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { currentUser } from "./atoms/user";
 import { BASE_URL } from "../server/config";
 import React from "react";
+import { fetchUser } from "./API/userAxios";
 
 
 function Appbar() {
@@ -14,27 +15,27 @@ function Appbar() {
     const [loggedInUser, setloggedInUser] = useRecoilState(currentUser);
 
     useEffect(() => {
-        async function fetchData() {
-        try {
-        await axios.get(`${BASE_URL}/admin/me`,{
-            withCredentials: true
-        }).then(response => {
-            setloggedInUser((ex) => ({
-                ...ex, 
-                user: response.data.username
-            }));
-        });
-        } catch (err) {
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            console.error(err.message);
-        } finally {
-            setloggedInUser((ex) => ({
-                ...ex,
-                isLoading: false
-            }));
-        }
-        }
-        fetchData();
+        // async function fetchData() {
+        // try {
+        // await axios.get(`${BASE_URL}/admin/me`,{
+        //     withCredentials: true
+        // }).then(response => {
+        //     setloggedInUser((ex) => { return {
+        //         ...ex, 
+        //         user: response.data.username
+        //     }});
+        // });
+        // } catch (err) {
+        //     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        //     console.error(err.message);
+        // } finally {
+        //     setloggedInUser((ex) => ({
+        //         ...ex,
+        //         isLoading: false
+        //     }));
+        // }
+        // }
+        fetchUser();
     }, []);
        
     if(loggedInUser.isLoading) {

@@ -11,12 +11,17 @@ export async function fetchUser() {
     await axios.get(`${BASE_URL}/admin/me`, {
         withCredentials: true
     }).then(response => {
-        setuser((ex) => {
+        setuser((ex) => { return {
             ...ex,
             user: response.data.username
-        })
+        }});
     });
     } catch (err) {
         console.error((err as Error).message);
+    } finally {
+        setuser((ex) => { return {
+            ...ex,
+            isLoading: false
+        }});
     }
-}
+}   

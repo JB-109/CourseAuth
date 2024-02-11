@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from '../server/config';
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { user } from './atoms/user';
+import { currentUser } from './atoms/user';
 import React from "react";
 
 function Signin() {
   const navigate = useNavigate();
   const [username, setusername] = useState<string | undefined>();
   const [password, setpassword] = useState<string | undefined>();
-  const [loggedInUser, setLoggedInUser] = useRecoilState(user);
+  const [loggedInUser, setLoggedInUser] = useRecoilState(currentUser);
 
   return (
     <div>
