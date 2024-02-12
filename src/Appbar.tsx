@@ -14,11 +14,7 @@ function Appbar() {
     const fetchuser = usefetchUser();
 
     useEffect(() => {
-        const fetchData = async () => {
-            await fetchuser();
-            
-        };
-        fetchData();
+        fetchuser() 
     }, []);
        
     if(user.isLoading) {

@@ -13,7 +13,7 @@
   "include": [
     "server/**/*.ts",
     "src/**/*.ts"
-  ],
+, "src/yuhi.js"  ],
   "exclude": [
     "node_modules",
     "dist"
