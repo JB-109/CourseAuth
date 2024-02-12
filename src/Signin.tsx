@@ -15,6 +15,7 @@ function Signin() {
   const [username, setusername] = useState<string | undefined>();
   const [password, setpassword] = useState<string | undefined>();
   const [loggedInUser, setLoggedInUser] = useRecoilState(currentUser);
+  const Body = { username: username, password: password }
 
   return (
     <div>
@@ -28,7 +29,7 @@ function Signin() {
         <Typography variant={"h6"} style={{
           color: "white"
         }}>
-             Welcome back to Tunnel, SignIn Below - 
+            Welcome back to Tunnel, SignIn Below - 
         </Typography>
 
       </div>
@@ -57,25 +58,24 @@ function Signin() {
             size="large" 
             variant="outlined" 
             onClick={async ()=> {
-              try {
-                const response = await axios.post(`${BASE_URL}/admin/login`,
-                  { 
-                    username: username,
-                    password: password
-                  },
+
+                await axios.post(`${BASE_URL}/admin/login`, Body, 
                   {
                     withCredentials: true
                   }
-                )
-                setLoggedInUser((ex) => ({
-                  ...ex,
-                  user: username
-                }));
-              } catch (error) {
-                console.error(error.message);
-              } finally {
-                navigate("/dashboard")
-              }
+                ).then(response => {
+                  if(response.status === 201) {
+                    setLoggedInUser((ex) => ({
+                      ...ex,
+                      user: username,
+                      isLoading: false
+                    }));
+                    navigate("/dashboard")
+                  }
+                }).catch(error => {
+                  console.error(error.message);
+                }) 
+              
             }}>Sign In</Button>
         </Card>
         

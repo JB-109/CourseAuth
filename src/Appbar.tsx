@@ -62,7 +62,7 @@ function Appbar() {
                             ...ex,
                             user: ""
                         }));
-                        navigate("/dashboard");
+                        navigate("/signin");
                     }}>
                         LOG OUT
                 </button>

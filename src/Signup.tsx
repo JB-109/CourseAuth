@@ -4,10 +4,18 @@ import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import React from "react";
+import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { BASE_URL } from '../server/config';
+import { useRecoilState } from 'recoil';
+import { currentUser } from './atoms/user';
 
 function Signup() {
+  const navigate = useNavigate();
   const [Username, setUsername] = useState<string | undefined>();
   const [Password, setPassword] = useState<string | undefined>();
+  const [isLoading, setisLoading] = useRecoilState(currentUser);
+  const Body = {username: Username, password: Password}
 
   return (
     <div> 
@@ -47,19 +55,26 @@ function Signup() {
           <Button 
             size="large" 
             variant="outlined" 
-            onClick={()=> {
-                fetch("http://localhost:3000/admin/signup", {
-                  method: "POST",
-                  credentials: "include",
-                  body: JSON.stringify({
-                    username: Username,
-                    password: Password
-                  }),
-                  headers: {
-                    "content-type": "application/json"
+            onClick={() => {
+
+                axios.post(`${BASE_URL}/admin/signup`, Body, {
+                  withCredentials: true
+                })
+                .then(response => {
+                  if (response.status === 201) {
+                    setisLoading((ex) => ({
+                      ...ex,
+                      user: Username,
+                      isLoading: false
+                    }))
+                    navigate("/dashboard");
                   }
-              });
-          }}>Sign Up</Button>
+                }).catch(error => {
+                  console.error(error.message);
+                })
+
+            }}>Sign Up
+          </Button>
           
         </Card>
         

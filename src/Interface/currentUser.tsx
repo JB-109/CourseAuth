@@ -1,4 +1,4 @@
 export interface userInterface {
-    user: string,
+    user: string | undefined,
     isLoading: boolean
 }
