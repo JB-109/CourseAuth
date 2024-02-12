@@ -1,47 +1,30 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useRecoilState } from "recoil";
 import { currentUser } from "./atoms/user";
-import { BASE_URL } from "../server/config";
 import React from "react";
-import { fetchUser } from "./API/userAxios";
+import { usefetchUser } from "./API/userAxios";
 
 
 function Appbar() {
 
     const navigate = useNavigate();
-    const [loggedInUser, setloggedInUser] = useRecoilState(currentUser);
+    const [user, setuser] = useRecoilState(currentUser);
+    const fetchuser = usefetchUser();
 
     useEffect(() => {
-        // async function fetchData() {
-        // try {
-        // await axios.get(`${BASE_URL}/admin/me`,{
-        //     withCredentials: true
-        // }).then(response => {
-        //     setloggedInUser((ex) => { return {
-        //         ...ex, 
-        //         user: response.data.username
-        //     }});
-        // });
-        // } catch (err) {
-        //     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        //     console.error(err.message);
-        // } finally {
-        //     setloggedInUser((ex) => ({
-        //         ...ex,
-        //         isLoading: false
-        //     }));
-        // }
-        // }
-        fetchUser();
+        const fetchData = async () => {
+            await fetchuser();
+            
+        };
+        fetchData();
     }, []);
        
-    if(loggedInUser.isLoading) {
+    if(user.isLoading) {
         return null;
     }
-        if(loggedInUser.user) {  
+        if(user.user) {  
         return (
             <div style={{
                 backgroundColor: "#363636",
@@ -53,7 +36,7 @@ function Appbar() {
                     color: "white",
                     marginLeft: 5,
                 }}>
-                    {loggedInUser.user}
+                    {user.user}
                 </Typography>
 
                 <div>
@@ -79,7 +62,7 @@ function Appbar() {
                 <button 
                     onClick = {() => {
                         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        setloggedInUser((ex) => ({
+                        setuser((ex) => ({
                             ...ex,
                             user: ""
                         }));
