@@ -57,10 +57,12 @@ function Signup() {
             variant="outlined" 
             onClick={() => {
 
-                axios.post(`${BASE_URL}/admin/signup`, Body, {
+                axios.post(`${BASE_URL}/admin/signup`, Body, 
+                {
                   withCredentials: true
                 })
                 .then(response => {
+
                   if (response.status === 201) {
                     setisLoading((ex) => ({
                       ...ex,
@@ -69,6 +71,7 @@ function Signup() {
                     }))
                     navigate("/dashboard");
                   }
+
                 }).catch(error => {
                   console.error(error.message);
                 })

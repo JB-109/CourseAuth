@@ -5,12 +5,7 @@ import { routes } from './routes';
 import { RecoilRoot } from "recoil"; 
 
 function App() {
-
-  const new1 = routes.map((route, index) => (
-    <Route key={index} {...route} />
-  ))
-  console.log(new1);
-
+  
   return (  
     <div style={{
       backgroundColor: "#195e83",
