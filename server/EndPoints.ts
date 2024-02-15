@@ -1,7 +1,6 @@
 import express from "express";
-import { adminAuth, verifytoken, checkExistence } from "./Middleware.js";
+import { adminAuth, verifytoken, checkExistence, createJWT } from "./Middleware.js";
 import * as db from "./db.js";
-import { createJWT } from "./Middleware.js";
 
 const router = express.Router();
 
@@ -9,8 +8,8 @@ const router = express.Router();
 router.get("/", adminAuth, async (req, res) => {
     
     try {
-    const getStoredAdmin = await db.admin.find();
-    res.status(200).send(getStoredAdmin);
+        const getStoredAdmin = await db.admin.find();
+        res.status(200).send(getStoredAdmin);
     } catch (err) {
         console.error((err as Error).message);
         res.status(500).send("Internal Server Error at ADMIN-AUTH");
@@ -22,23 +21,23 @@ router.get("/", adminAuth, async (req, res) => {
 router.post("/signup", async (req, res) => {
     
     try {
-    let username = req.body.username;
-    let password = req.body.password;
-    let storedAdmin = await db.admin.findOne({username});
-    if(storedAdmin) {
-        res.status(409).send(`${username} not Available`);
-    }
-    else{
-        const newAdmin = new db.admin({username: username, password: password});
-        await newAdmin.save();
-        try {
-        let token = createJWT(username);
-        res.cookie("token", token);
-        } catch (err) {
-            console.error((err as Error).message);
+        let username = req.body.username;
+        let password = req.body.password;
+        let storedAdmin = await db.admin.findOne({username});
+        if(storedAdmin) {
+            res.status(409).send(`${username} not Available`);
         }
-        res.status(201).send(`Welcome ${username}`);
-    }
+        else{
+            const newAdmin = new db.admin({username: username, password: password});
+            await newAdmin.save();
+            try {
+                let token = createJWT(username);
+                res.cookie("token", token);
+            } catch (err) {
+                console.error((err as Error).message);
+            }
+            res.status(201).send(`Welcome ${username}`);
+        }
     } catch (err) {
         console.error((err as Error).message);
         res.status(500).send("error at ADMIN-SIGNUP");
@@ -71,8 +70,8 @@ router.post("/add-courses", verifytoken, async (req, res) => {
 // GET COURSES END-POINT
 router.get("/courses", verifytoken, async (req, res) => {
     try {
-    const getStoredCourses = await db.courses.find().exec();
-    res.status(201).send(getStoredCourses);
+        const getStoredCourses = await db.courses.find().exec();
+        res.status(201).send(getStoredCourses);
     } catch (err) {
         console.error((err as Error).message);
         res.status(500).send("Internal Serevre Error at VERIFY-TOKEN");

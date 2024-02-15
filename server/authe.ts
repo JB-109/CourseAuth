@@ -4,6 +4,7 @@ const port = 3000;
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import endPoints from "./EndPoints.js";
+import userEndPoints from "./userEndPoints.js"
 import { requests } from "./Middleware.js";
 
 app.use(express.json());
@@ -19,3 +20,5 @@ const server = app.listen(port, () => {
 // END-POINTS
 app.use("/admin", endPoints);
 
+// END-POINTS
+app.use("/user", userEndPoints);

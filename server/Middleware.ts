@@ -92,8 +92,8 @@ export function checkExistence (req: Request, res: Response, next: NextFunction)
 export function createJWT (user: string) {
 
     try {
-    const payload = {username: user};
-    const token = jwt.sign(payload, secretKey, { expiresIn: "0.5h"});
+        const payload = {username: user};
+        const token = jwt.sign(payload, secretKey, { expiresIn: "0.5h"});
     return token;
     } catch (err) {
         console.error((err as Error).message);
