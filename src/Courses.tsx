@@ -17,7 +17,7 @@ function Getcourses() {
             });
             setcourses(response.data);
         } catch (error){
-            console.error(error.message);
+            console.error((error as Error).message);
         } }
         fetchData();
 
@@ -33,7 +33,7 @@ function Getcourses() {
     )
 }
 
-function ShowCourses(props) {
+function ShowCourses(props: any) {
     return (
         <div style={{
             display: "flex",
